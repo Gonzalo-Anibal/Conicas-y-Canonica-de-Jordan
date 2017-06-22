@@ -268,27 +268,6 @@ int main (){
     if( (J[0][0]==M_aux2[0][0]) && (J[0][1]==M_aux2[0][1]) && (J[1][0]==M_aux2[1][0]) && (J[1][1]==M_aux2[1][1]) ){
       cout<<"\nQueda comprobado que cumple \n\n\t[  C⁻¹ * A * C = J  ]\n"<<endl;
     }
-    
-    /*
-    float ecfinal;
-    ecfinal = (solucion + x) / y
-    //evaluar en x=0 para sacar valor a y
-    tenemos nuevo vector
-
-
-    (i) = ( A - lambda*I ) V(i+1)
-    resolver ecuación
-    evaluearlo en un nro cualquiera
-    comprover [  C⁻¹ * A * C = J  ]
-    i++
-    //*///
-
-
-
-
-
-
-
   }
   else{
     //Normalizar V1
