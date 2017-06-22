@@ -1,0 +1,363 @@
+#include <iostream>
+#include <stdio.h>
+#include <cmath>
+
+using namespace std;
+
+int main (){
+  float a, b ,c, d, e, F;
+  int multiplicidad_algebraica = 0, multiplicidad_geometrica = 0;
+  float matrix[2][2];
+  cout<<"\t\t\tCanonica de Jordan"<<endl;
+  //DETERMINAR FORMA DE INGRESO DE MATRIZ A
+  int opcioningreso = 0;
+  do{
+    cout<<"\nForma de ingreso matriz A (elija opción)\n\n1) Dada una ecuación.\n2) Ingreso directo de matriz A."<<endl;
+    cin>>opcioningreso;
+  }while ( opcioningreso != 1 && opcioningreso != 2 );
+  if (opcioningreso == 1){
+    cout<<"\n\nIngreso por Ecuación:\n\nIngrese ecucion : a x² + b xy + c y² + d x + e y = F"<<endl;
+    cout<<"\nIngrese valor de a :\t";
+    cin>>a;
+    cout<<"\nIngrese valor de b :\t";
+    cin>>b;
+    cout<<"\nIngrese valor de c :\t";
+    cin>>c;
+    cout<<"\nIngrese valor de d :\t";
+    cin>>d;
+    cout<<"\nIngrese valor de e :\t";
+    cin>>e;
+    cout<<"\nIngrese valor de F :\t";
+    cin>>F;
+    cout<<"\n-------------------------------------------------------------------------------------------------------------"<<endl;
+    if(d==0 && e==0){
+      cout<<"\nEcuación ingresada: "<<a<<" x² + "<<b<<" xy + "<<c<<" y² = "<<F<<endl;
+    }
+    else{
+      cout<<"\nEcuación ingresada: "<<a<<" x² + "<<b<<" xy + "<<c<<" y² + "<<d<<" x + "<<e<<" y = "<<F<<endl;
+    }
+    //Llenar :
+    matrix[0][0] = a;     //a11
+    matrix[0][1] = b/2;   //a12
+    matrix[1][0] = b/2;   //a21
+    matrix[1][1] = c;     //a22
+    //Mostrar Matriz de ecuacion
+  }
+  if ( opcioningreso == 2 ){
+    cout<<"\n\tIngreso directo a matriz A\nIngrese valor a11 : "<<endl;
+    cin>>matrix[0][0];
+    cout<<"\nIngrese valor a12 : "<<endl;
+    cin>>matrix[0][1];
+    cout<<"\nIngrese valor a21 : "<<endl;
+    cin>>matrix[1][0];
+    cout<<"\nIngrese valor a22 : "<<endl;
+    cin>>matrix[1][1];
+  }
+  //Mostrar :
+  cout<<"\nMostrar Matriz A :\n"<<endl;
+  for (int i=0; i<2; i++){
+    for (int j=0; j<2; j++){
+      cout<<matrix[i][j]<<"\t";
+    }
+    cout<<"\n";
+  }
+  //Valores Propios
+  float lambda1 = 0;
+  float lambda2 = 0;
+  float a_ecuacion, b_ecuacion, c_ecuacion;
+
+  //(lambda - a11) * (lambda - a22)
+  // lambda*lambda + [(-a11)+(-a22)]*(lambda) + [(-a11)*(-a22)]
+  // (a==1)lambda² +        b   * lambda      + c
+
+  a_ecuacion = 1;
+  b_ecuacion = ((-matrix[0][0])+(-matrix[1][1]));
+  c_ecuacion = ((-matrix[0][0])*(-matrix[1][1]));
+  c_ecuacion = (c_ecuacion) - ((-(matrix[0][1])) *(- (matrix[1][0])));
+  //tenemos los valores de a,b,c de la ecuacion ax² + bx + c
+
+  float interiorRaiz = pow(b_ecuacion,2) -4*(a_ecuacion*c_ecuacion);
+  /** Si es negativa no tiene solucion en los numeros reales
+   *  solo en los numeros imaginarios.
+  */
+  cout<<"-------------------------------------------------------------------------------------------------------------"<<endl;
+  if(interiorRaiz < 0){
+        cout << "Esta ecuacion no tiene solucion en los numeros reales." << endl;
+	return 0;
+  }
+  else{
+    lambda1 = (-b_ecuacion+sqrt(interiorRaiz))/(2*a_ecuacion);
+    lambda2 = (-b_ecuacion-sqrt(interiorRaiz))/(2*a_ecuacion);
+    cout << "Valores Propios" <<endl;
+    if(lambda1 == lambda2){
+      multiplicidad_algebraica = 1;
+      cout << "La unica solucion es:" << lambda1;
+    }
+    else{
+      multiplicidad_algebraica = 2;
+      cout << "La primera solucion es: " << lambda1 << "\n";
+      cout << "La segunda solucion es: " << lambda2 << "\n";
+    }
+  }
+  //Se Sacaron valores propios
+  cout<<"\n-------------------------------------------------------------------------------------------------------------"<<endl;
+  float aux_a11, aux_a12, aux_a21, aux_a22, x, y, var_propio1, var_propio2, var_propio3, var_propio4;
+  //Se debe proceder a buscar Vectores Propios
+  //Caso lambda 1
+  /*
+  a11 = lambda1-a11
+  a12 = -a12
+  a21 = -a21
+  a22 = lambda1-a22
+  */
+  aux_a11 = lambda1-(matrix[0][0]);
+  aux_a12 = -(matrix[0][1]);
+  aux_a21 = -(matrix[1][0]);
+  aux_a22 = lambda1-(matrix[1][1]);
+  //Se hace sistema de ecuaciones
+  x = aux_a11 + aux_a21;
+  y = (aux_a12 + aux_a22)*(-1);
+  //cout<<"x = "<<x<<" y = "<<y<<endl;
+  var_propio1 = 1;
+  var_propio2 = x/y;
+  cout<<"Vectores Propios V1 <("<<var_propio1<<","<<var_propio2<<")>"<<endl;
+  //Caso lambda 2
+  /*
+  a11 = lambda2-a11
+  a12 = -a12
+  a21 = -a21
+  a22 = lambda2-a22
+  */
+  aux_a11 = lambda2-(matrix[0][0]);
+  aux_a12 = -(matrix[0][1]);
+  aux_a21 = -(matrix[1][0]);
+  aux_a22 = lambda2-(matrix[1][1]);
+  //Se hace sistema de ecuaciones
+  x = (aux_a11 + aux_a21)*(-1);
+  y = aux_a12 + aux_a22;
+  //cout<<"x = "<<x<<" y = "<<y<<endl;
+  var_propio3 = y/x;
+  var_propio4 = 1;
+  cout<<"\nVector Propio V2 <("<<var_propio3*2<<","<<var_propio4*2<<")>"<<endl;
+  cout<<"-------------------------------------------------------------------------------------------------------------"<<endl;
+  cout<<"Como diferencias de multiplicidades"<<endl;
+  if((var_propio1 == (var_propio3*2))&&(var_propio2 == (var_propio4*2))){
+    multiplicidad_geometrica = 1;
+    cout<<"\tMultiplicidad Algebraica != Multiplicidad Geometrica"<<endl;
+    cout<<"Matriz A es NO diagonalizable"<<endl;
+    //Crear forma Canonica de Jordan de A_matriz
+    float J[2][2];
+    J[0][0] = lambda1;
+    J[0][1] = 1;
+    J[1][0] = 0;
+    J[1][1] = lambda1;
+    //Mostrar :
+    cout<<"\nMostrar Forma Canonica de Jordan de A :\n"<<endl;
+    for (int i=0; i<2; i++){
+      for (int j=0; j<2; j++){
+        cout<<J[i][j]<<"\t";
+      }
+      cout<<"\n";
+    }
+    //Determinar C⁻¹ * A * c = J
+    //Crear Función para Multiplicar matrices
+    ///*crear metodo recursivo para:
+    //i=1
+    //V(1):
+    cout<<"Vectores Propios V1 <("<<var_propio1<<","<<var_propio2<<")>"<<endl;
+
+    //( A - lambda*I ):
+    aux_a11 = (matrix[0][0]) - lambda1;
+    aux_a12 = (matrix[0][1]);
+    aux_a21 = (matrix[1][0]);
+    aux_a22 = (matrix[1][1]) - lambda1;
+    //Mostrar     ( A - lambda*I )
+    cout<<"MATRIZ  ( A - lambda*I )"<<endl;
+    cout<<aux_a11<<"\t"<<aux_a12<<"\n"<<aux_a21<<"\t"<<aux_a22<<"\n"<<endl;
+
+    //Se hace sistema de ecuaciones
+    float solucion = 0;
+    /*
+    aux_a11 *x + aux_a12 *y = var_propio1
+    aux_a21 *x + aux_a22 *y = var_propio2
+    */
+    solucion = var_propio1 + var_propio2;
+    x = aux_a11 + aux_a21;
+    y = aux_a12 + aux_a22;
+    //x = x * -1;
+    cout<<"solución: "<<solucion<<"\tX: "<<x<<"\tY: "<<y<<endl;
+    x = x/solucion;
+    y = y/solucion;
+    solucion = solucion/solucion;
+    cout<<"solución: "<<solucion<<"\tX: "<<x<<"\tY: "<<y<<endl;
+    x = x * -1;
+    cout <<y<<"Y = "<<solucion<<" + "<<x<<" X"<<endl;
+    solucion = solucion / y;
+    x = x / y;
+    y = y / y;
+    cout <<"Y = "<<solucion<<" + "<<x<<" X"<<endl;
+    cout<<"-------------------------------------------------------------------------------------------------------------"<<endl;
+    float aux_de_x=0;
+    cout<<"Ingrese valor a 'X' para poder evaluar 'Y'"<<endl;
+    cin>>aux_de_x;
+    y = solucion + (x * aux_de_x);
+    cout <<y<<" = "<<solucion<<" + "<<x<<" * "<<aux_de_x<<endl;
+    cout<<"Y = "<<y<<endl;
+    cout<<"-------------------------------------------------------------------------------------------------------------"<<endl;
+    //Creacion de Matriz C
+    float matriz_C [2][2];
+    matriz_C[0][0] = var_propio1;
+    matriz_C[1][0] = var_propio2;
+    matriz_C[0][1] = aux_de_x;
+    matriz_C[1][1] = y;
+    //Mostrar Matriz C
+    cout<<"\nMostrar Matriz C :\n"<<endl;
+    for (int i=0; i<2; i++){
+      for (int j=0; j<2; j++){
+	cout<<matriz_C[i][j]<<"\t";
+      }
+      cout<<"\n";
+    }
+    //Calcular inversa
+    float aux_inv=0;
+    float matriz_C_inv[2][2];
+    cout<<"\nProcederemos a calcular su inversa\n"<<endl;
+    aux_inv = 1 / ( (matriz_C[0][0] * matriz_C[1][1]) - (matriz_C[0][1] * matriz_C[1][0]) ) ;
+    cout<<"nuestro aux : "<<aux_inv<<endl;
+    matriz_C_inv[0][0] = matriz_C[1][1] * aux_inv;
+    matriz_C_inv[0][1] = -matriz_C[0][1] * aux_inv;
+    matriz_C_inv[1][0] = -matriz_C[1][0] * aux_inv;
+    matriz_C_inv[1][1] = matriz_C[0][0] * aux_inv;
+    //Mostrar Matriz C inversa
+    cout<<"\nMostrar Matriz C inversa :\n"<<endl;
+    for (int i=0; i<2; i++){
+      for (int j=0; j<2; j++){
+	cout<<matriz_C_inv[i][j]<<"\t";
+      }
+      cout<<"\n";
+    }
+    //COMPROBAR [  C⁻¹ * A * C = J  ]
+    float M_aux1[2][2];
+    float M_aux2[2][2];
+    // Inicializamos la matriz aux1.
+    for(int i=0; i<2; ++i)
+        for(int j=0; j<2; ++j)
+            M_aux1[i][j] = 0;
+    // Inicializamos la matriz aux2.
+    for(int i=0; i<2; ++i)
+        for(int j=0; j<2; ++j)
+            M_aux2[i][j] = 0;
+    //Multiplicamos [ C⁻¹ * A ] = M_aux1
+    for(int i=0; i<2; ++i)
+        for(int j=0; j<2; ++j)
+            for(int z=0; z<2; ++z)
+                M_aux1[i][j] += matriz_C_inv[i][z] * matrix[z][j];
+    //Multiplicamos [ M_aux1 * C ] = M_aux2
+    for(int i=0; i<2; ++i)
+        for(int j=0; j<2; ++j)
+            for(int z=0; z<2; ++z)
+                M_aux2[i][j] += M_aux1[i][z] * matriz_C[z][j];
+    //Mostrar resultado de las multipplicaciones:  Matriz aux_2
+    cout<<"\nMostrar Matriz Resultante :\n"<<endl;
+    for (int i=0; i<2; i++){
+      for (int j=0; j<2; j++){
+	cout<<M_aux2[i][j]<<"\t";
+      }
+      cout<<"\n";
+    }
+    if( (J[0][0]==M_aux2[0][0]) && (J[0][1]==M_aux2[0][1]) && (J[1][0]==M_aux2[1][0]) && (J[1][1]==M_aux2[1][1]) ){
+      cout<<"\nQueda comprobado que cumple \n\n\t[  C⁻¹ * A * C = J  ]\n"<<endl;
+    }
+    
+    /*
+    float ecfinal;
+    ecfinal = (solucion + x) / y
+    //evaluar en x=0 para sacar valor a y
+    tenemos nuevo vector
+
+
+    (i) = ( A - lambda*I ) V(i+1)
+    resolver ecuación
+    evaluearlo en un nro cualquiera
+    comprover [  C⁻¹ * A * C = J  ]
+    i++
+    //*///
+
+
+
+
+
+
+
+  }
+  else{
+    //Normalizar V1
+    float nor_val1, nor_val2; //valores propios del vector propio 1 normalizado
+    nor_val1 = (var_propio1)/(sqrt(pow(var_propio1, 2)+pow(var_propio2, 2)));
+    nor_val2 = (var_propio2)/(sqrt((pow(var_propio1, 2))+ (pow(var_propio2, 2))));
+    cout<<"V1 Normalizado : ( "<<nor_val1<<" , "<<nor_val2<<" )"<<endl;
+    cout<<"-------------------------------------------------------------------------------------------------------------"<<endl;
+    //Normalizar V2
+    float nor_val3, nor_val4; //valores propios del vector propio 1 normalizado
+    nor_val3 = (var_propio3)/(sqrt(pow(var_propio3, 2)+pow(var_propio4, 2)));
+    nor_val4 = (var_propio4)/(sqrt((pow(var_propio3, 2))+ (pow(var_propio4, 2))));
+    cout<<"V2 Normalizado : ( "<<nor_val3<<" , "<<nor_val4<<" )"<<endl;
+    cout<<"-------------------------------------------------------------------------------------------------------------"<<endl;
+    //Con los Vectores Propios Normalizados V1 y V2 crearemos la matriz ortogonal P
+    //Crear matriz P
+    float matrizP[2][2];
+    matrizP[0][0] = nor_val1;
+    matrizP[0][1] = nor_val3;
+    matrizP[1][0] = nor_val2;
+    matrizP[1][1] = nor_val4;
+    //Mostrar Matriz P
+    cout<<"Mostrar Matriz P :\n"<<endl;
+    for (int i=0; i<2; i++){
+      for (int j=0; j<2; j++){
+        cout<<matrizP[i][j]<<"\t";
+      }
+      cout<<"\n";
+    }
+    //Deberemos comprobar que el determinante de P es igual a 1
+    //Sacar Determinante
+    float determinanteP=0;
+    determinanteP = (matrizP[0][0] * matrizP[1][1])-(matrizP[0][1] * matrizP[1][0]);
+    cout<<"Determinante = "<<determinanteP<<endl;
+    /*if(determinanteP != 1.0){
+      cout<<"\n\nEl Determinante de la Matriz P es distinto a 1 o -1, por lo tanto no es ortogonal, no se puede sacer su forma cuadratica\n\tSE TERMINA PROGRAMA\n\n";
+      return 0;
+      }*/
+
+    //Se definiran ecuaciones que rigen a  x' e y'
+    //Deberemos trasponer la matriz P
+    float matrizP_transp[2][2];
+    for (int i=0; i<2; i++){
+      for (int j=0; j<2; j++){
+        matrizP_transp[j][i] = matrizP[i][j];
+      }
+    }
+    cout<<"\nMostrar Matriz P transpuesta :\n"<<endl;
+    for (int i=0; i<2; i++){
+      for (int j=0; j<2; j++){
+        cout<<matrizP_transp[i][j]<<"\t";
+      }
+      cout<<"\n";
+    }
+    cout<<"-------------------------------------------------------------------------------------------------------------"<<endl;
+    float y_prima, x_prima;
+    //Ocupando Matriz P transpuesta
+    //x' = 0
+    //matrizP_transp[0][0]*x + matriz_transp[0][1]*y = 0
+    //y = - matrizP_transp[0][0] * (matrizP_transp[0][1])^(-1)
+    y_prima = ((-(matrizP_transp[0][0]))*(pow(matrizP_transp[0][1], -1)));
+    cout<<"Ecuación que define a y' : "<<y_prima<<" x"<<endl;
+
+    //y' = 0
+    //matrizP_transp[1][0]*x + matrizP_transp[1][1]*y = 0
+    //y = - matrizP_transp[1][0] * (matrizP_transp[1][1])^(-1)
+    x_prima = ((-(matrizP_transp[1][0]))*(pow(matrizP_transp[1][1], -1)));
+    cout<<"Ecuación que define a x' : "<<x_prima<<" x"<<endl;
+    cout<<"-------------------------------------------------------------------------------------------------------------"<<endl;
+  }
+  return 0;
+}
